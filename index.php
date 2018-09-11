@@ -1,3 +1,15 @@
+<?php
+	$firstName = "Caupo";
+	$lastName = "Helvik";
+	$date = date("d.m.Y");
+	$hourNow = date("G");
+	$partOfDay = "";
+	
+	if($hourNow < 8) $partOfDay = "Varajane hommik";
+	elseif($hourNow >= 8 && $hourNow < 16) $partOfDay = "Lõuna";
+	elseif($hourNow >= 16) $partOfDay = "Õhtupoolik";
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -10,6 +22,13 @@
 	<body>
 		<h1>asdasda</h1>
 		<div class="center">
+		
+			<p>
+				<?= 'Tere tulemast: '.$firstName.' '.$lastName ?><br>
+				Tänane kuupäev on: <strong><?= $date ?></strong><br>
+				Lehe avanemise hetkel oli: <strong><?= $partOfDay ?> | <?= date('H:i:s') ?></strong>
+			</p>
+		
 			<div class="pictures">
 				<img class="pic" src="asd.jpg" alt="asd">
 				<img class="pic" src="../../~rinde/veebiprogrammeerimine2018s/tlu_terra_600x400_2.jpg" alt="Happy 911">
