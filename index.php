@@ -8,10 +8,10 @@
 	</head>
 
 	<body>
-		<h1>Happy 911</h1>
+		<h1>asdasda</h1>
 		<div class="center">
 			<div class="pictures">
-				<img class="pic" src="happy911.jpg" alt="Happy 911">
+				<img class="pic" src="asd.jpg" alt="asd">
 				<img class="pic" src="../../~rinde/veebiprogrammeerimine2018s/tlu_terra_600x400_2.jpg" alt="Happy 911">
 			</div>
 			<p>Siin on minu <a target="_blank" href="http://tlu.ee">TLÜ</a> õppetöö</p>
