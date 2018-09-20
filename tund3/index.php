@@ -1,7 +1,9 @@
 <?php
 	$firstName = "Caupo";
 	$lastName = "Helvik";
+	$day = date("d");
 	$date = date("d.m.Y");
+	$year = date("Y");
 	$hourNow = date("G");
 	$weekdayToday = date("N");
 	$monthNumber = intval(date("m"));
@@ -71,6 +73,7 @@
 		
 			<p>
 				<?= 'Tere tulemast: '.$firstName.' '.$lastName ?><br>
+				Täna on: <strong><?= $day ?>. <?= $months[$monthNumber] ?> <?= $year ?></strong><br>
 				Tänane kuupäev on: <strong><?= $date ?></strong><br>
 				Tänane nädalapäev on: <strong><?= $weekdays['et'][$weekdayToday] ?></strong><br>
 				Hetkene kuu: <strong><?= $months[$monthNumber] ?></strong><br>
