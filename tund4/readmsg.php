@@ -1,7 +1,7 @@
 <?php
 require('functions.php');
-    $notice = getAllComments();
-    
+    $comments = getAllComments();
+    $notice = "";
 
 ?>
 
@@ -18,7 +18,9 @@ require('functions.php');
 		<p>
 			<h1>Readmsg.php</h1>
             <p>
-                <?= $notice ?>
+                <?php foreach($comments as $comment): ?>
+                    <p><?= $comment ?></p>
+                <?php endforeach; ?>
             </p>
             <hr>
             <p>

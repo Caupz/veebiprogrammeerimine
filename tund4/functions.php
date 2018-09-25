@@ -23,7 +23,7 @@ function setDbConnection() {
 function getAllComments() {
     setDbConnection();
     $connection = $GLOBALS['connection'];
-    $stmt = $connection->prepare('SELECT message FROM comment');
+    $stmt = $connection->prepare('SELECT comment FROM comment');
     $stmt->bind_result($msg);
     $stmt->execute();
     $comments = [];
