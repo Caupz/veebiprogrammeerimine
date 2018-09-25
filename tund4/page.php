@@ -1,6 +1,9 @@
 <?php
+require('functions.php');
+
 	$firstName = "Tundmatu";
 	$lastName = "Kodanik";
+	$fullName = "";
 	$birthyear = 1999;
 	$month = intval(date('m'));
 	
@@ -8,17 +11,11 @@
 	$lastName = escapePostData('lastname');
 	$birthyear = escapePostData('birthyear');
 	$birthMonth = escapePostData('birthMonth');
-	
-	function escapePostData($index) {
-		$str = '';
-		if(isset($_POST[$index])) {
-			$str = $_POST[$index];
-			$str = trim($str);
-			$str = stripslashes($str);
-			$str = htmlspecialchars($str);
-		}
-		return $str;
-	}
+
+    function setFullName() {
+        $GLOBALS['fullName'] = $GLOBALS['firstName'].' '.$GLOBALS['lastName'];
+    }
+    setFullName();
 
 	$months = [
 		'et' => [
@@ -51,7 +48,7 @@
 		<p>
 			<h1>Page.php</h1>
 			<?= $firstName ?> <?= $lastName ?> <?= $birthyear ?> <?= $month ?>
-			
+            <p><?= $fullName ?></p>
 			<hr>
 			<form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
 				<div class="pictures">

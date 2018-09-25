@@ -1,0 +1,11 @@
+anonüümsete sõnumite tabel
+
+CREATE TABLE `if18_caupo_he_1`.`comment` (
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    `user_id` INT NULL DEFAULT NULL ,
+    `comment` VARCHAR(256) NOT NULL ,
+    `accepted` BOOLEAN NOT NULL DEFAULT FALSE ,
+    `accepted_id` INT NULL DEFAULT '0' ,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `accepted_at` TIMESTAMP NULL DEFAULT NULL
+) ENGINE = InnoDB;
