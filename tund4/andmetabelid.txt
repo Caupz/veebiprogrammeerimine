@@ -9,3 +9,8 @@ CREATE TABLE `if18_caupo_he_1`.`comment` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `accepted_at` TIMESTAMP NULL DEFAULT NULL
 ) ENGINE = InnoDB;
+
+kasutajate tabelite loomine
+
+CREATE TABLE `if18_caupo_he_1`.`vpusers` ( `id` INT NOT NULL AUTO_INCREMENT , `firstname` VARCHAR(30) NOT NULL , `lastname` VARCHAR(30) NOT NULL , `email` VARCHAR(127) NOT NULL , `gender` INT(1) NOT NULL , `birthdate` DATE NOT NULL , `password_hash` INT NOT NULL , `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `vpusers` CHANGE `password_hash` `password_hash` VARCHAR(255) NOT NULL;

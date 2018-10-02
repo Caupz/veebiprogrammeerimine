@@ -11,6 +11,11 @@ h1 {
 	width: 800px;
 }
 
+label {
+	width: 100px;
+	display: inline-block;
+}
+
 .pictures {
 	text-align: center;
 }

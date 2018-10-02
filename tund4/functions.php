@@ -4,10 +4,10 @@ require("../../../config.php");
 function escapePostData($index) {
     $str = '';
     if(isset($_POST[$index])) {
-    $str = $_POST[$index];
-    $str = trim($str);
-    $str = stripslashes($str);
-    $str = htmlspecialchars($str);
+        $str = $_POST[$index];
+        $str = trim($str);
+        $str = stripslashes($str);
+        $str = htmlspecialchars($str);
     }
     return $str;
 }
@@ -24,6 +24,7 @@ function getAllComments() {
     setDbConnection();
     $connection = $GLOBALS['connection'];
     $stmt = $connection->prepare('SELECT comment FROM comment');
+    $msg = "";
     $stmt->bind_result($msg);
     $stmt->execute();
     $comments = [];
@@ -31,13 +32,35 @@ function getAllComments() {
     while($stmt->fetch()) {
         $comments[] = $msg;
     }
-    var_dump($comments);
     return $comments;
-
 }
 
-/* WARNING Multi field on veel katki !!!
- *
+function getAllAnimals() {
+    setDbConnection();
+    $connection = $GLOBALS['connection'];
+    $stmt = $connection->prepare('SELECT * FROM animal ORDER BY id DESC');
+    $id = "";
+    $name = "";
+    $color = "";
+    $tail_length = "";
+    $type = "";
+    $stmt->bind_result($id, $name, $color, $tail_length, $type);
+    $stmt->execute();
+    $entities = [];
+
+    while($stmt->fetch()) {
+        $entities[] = [
+            'id' => $id,
+            'name' => $name,
+            'color' => $color,
+            'tail_length' => $tail_length,
+            'type' => $type,
+        ];
+    }
+    return $entities;
+}
+
+/*
  * $table - table name in database
  * $values = [
  *      'field_name1' => 'field_value1',
@@ -52,23 +75,7 @@ function insertInto($table, $values) {
     $sql = "INSERT INTO {$table} (";
     $lastPartOfSql = "";
     $valuesInStr = "";
-    $notice = "";
     $_values = [];
-
-    foreach($values as $key => $value) {
-        $sql .= $key.',';
-        $lastPartOfSql .= '?,';
-        $valuesInStr .= $value.',';
-        $_values[] = $value;
-    }
-    $sql = rtrim($sql,",");
-    $lastPartOfSql = rtrim($lastPartOfSql,",");
-    $sql .= ") VALUES (";
-    $sql .= $lastPartOfSql.')';
-
-    var_dump($sql, $values);
-    $stmt = $connection->prepare($sql);
-    echo $connection->error;
     $paramTypes = "";
 
     foreach($values as $key => $value) {
@@ -76,19 +83,42 @@ function insertInto($table, $values) {
         else if(is_integer($value)) $paramTypes .= "i";
         else if(is_float($value) || is_double($value)) $paramTypes .= "d";
     }
-    $stmt->bind_param($paramTypes, $values['comment']);
-    //$stmt->bind_param($paramTypes, $values); TODO kuidagi teha et bind_param suudaks multida
+    $_values[] = & $paramTypes;
+    foreach($values as $key => $value) {
+        $sql .= $key.',';
+        $lastPartOfSql .= '?,';
+        $valuesInStr .= $value.',';
+        $_values[] = & $values[$key];
+    }
+    $sql = rtrim($sql,",");
+    $lastPartOfSql = rtrim($lastPartOfSql,",");
+    $sql .= ") VALUES (";
+    $sql .= $lastPartOfSql.')';
 
-    //var_dump($stmt->execute($_values));
+    $stmt = $connection->prepare($sql);
+    echo $connection->error;
+    call_user_func_array(array($stmt, 'bind_param'), $_values);
+
     if($stmt->execute()) {
         $notice = "Salvestati: {$valuesInStr}";
     } else {
         $notice = "Tekkis viga: {$stmt->error}";
     }
+
     $stmt->close();
     $connection->close();
     $connection = null;
     return $notice;
+}
+
+function GetFieldValue($index) {
+    if(isset($GLOBALS['fields'][$index])) return $GLOBALS['fields'][$index];
+    return '';
+}
+
+function ShowError($index) {
+    if(isset($GLOBALS['errors'][$index])) return $GLOBALS['errors'][$index];
+    return '';
 }
 
 ?>
