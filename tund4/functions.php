@@ -1,5 +1,6 @@
 <?php
 require("../../../config.php");
+session_start();
 
 function escapePostData($index) {
     $str = '';
@@ -19,7 +20,7 @@ function escapeStr($str) {
 $connection = null;
 
 function setDbConnection() {
-    if(is_null($GLOBALS['connection'])) {
+    if(is_null($GLOBALS['connection']) or !isset($GLOBALS['connection'])) {
         $GLOBALS['connection'] = new mysqli($GLOBALS['db']['host'], $GLOBALS['db']['user'], $GLOBALS['db']['pass'], $GLOBALS['db']['database']);
     }
 }
@@ -36,6 +37,9 @@ function getAllComments() {
     while($stmt->fetch()) {
         $comments[] = $msg;
     }
+    $stmt->close();
+    $connection->close();
+    $connection = null;
     return $comments;
 }
 
@@ -61,6 +65,35 @@ function getAllAnimals() {
             'type' => $type,
         ];
     }
+    $stmt->close();
+    $connection->close();
+    $connection = null;
+    return $entities;
+}
+
+function getAllUnvalidatedComments() {
+    setDbConnection();
+    $connection = $GLOBALS['connection'];
+    $stmt = $connection->prepare('SELECT id, user_id, comment, created_at FROM comment WHERE accepted = 0 AND accepted_id = 0 ORDER BY id DESC');
+    $id = "";
+    $user_id = "";
+    $comment = "";
+    $created_at = "";
+    $stmt->bind_result($id, $user_id, $comment, $created_at);
+    $stmt->execute();
+    $entities = [];
+
+    while($stmt->fetch()) {
+        $entities[] = [
+            'id' => $id,
+            'user_id' => $user_id,
+            'comment' => $comment,
+            'created_at' => $created_at
+        ];
+    }
+    $stmt->close();
+    $connection->close();
+    $connection = null;
     return $entities;
 }
 
@@ -94,6 +127,42 @@ function getAllUsersWithEmail($email) {
     }
 
     return $entities;
+}
+
+/*
+ * $table - table name in database
+ * $value = [
+ *      'field_name' => 'field_name',
+ *      'value' => 'value'
+ * ]
+ * $condition = [
+ *      'field_name' => 'field_name',
+ *      'value' => 'value'
+ * ]
+ * */
+function updateSet($table, $value, $condition) {
+    setDbConnection();
+    $connection = $GLOBALS['connection'];
+    //var_dump($connection);die;
+    $fieldName = $value['field_name'];
+    $condName = $condition['field_name'];
+    $stmt = $connection->prepare("UPDATE {$table} SET {$fieldName} = ? WHERE {$condName} = ?");
+    //var_dump($stmt);die;
+    echo $connection->error;
+    $stmt->bind_param("ss", $value['value'], $condition['value']);
+
+    //$stmt->bindParam(':fieldVal', $value['value'], PDO::PARAM_STR);
+    //$stmt->bindParam(':condVal', $condition['value'], PDO::PARAM_STR);
+
+    $notice = "";
+
+    if($stmt->execute()) {
+        $notice = "Kasutajat ei leitud.";
+    } else {
+        $notice = "Päringu tegemisel viga.";
+    }
+
+    return $notice;
 }
 
 /*
@@ -166,4 +235,46 @@ function ShowError($index) {
     return '';
 }
 
+
+function signIn($email, $password) {
+    setDbConnection();
+    $connection = $GLOBALS['connection'];
+    $stmt = $connection->prepare("SELECT id, firstname, lastname, password_hash FROM vpusers WHERE email = ? LIMIT 1");
+    echo $connection->error;
+    $stmt->bind_param("s", $email);
+    $resultPassword = "";
+    $id = "";
+    $firstname = "";
+    $lastname = "";
+    $stmt->bind_result($id, $firstname, $lastname, $resultPassword);
+    $notice = "";
+
+    if($stmt->execute()) {
+        if($stmt->fetch()) {
+            if(password_verify($password, $resultPassword)) {
+                $notice = "Sisselogimine õnnestus.";
+                $stmt->close();
+                $connection->close();
+                $connection = null;
+                $_SESSION['id'] = $id;
+                $_SESSION['firstname'] = $firstname;
+                $_SESSION['lastname'] = $lastname;
+                header("Location: main.php");
+                exit();
+            } else {
+                $notice = "Parool ei klapi.";
+            }
+        } else {
+            $notice = "Kasutajat ei leitud.";
+        }
+    } else {
+        $notice = "Päringu tegemisel viga.";
+    }
+
+    $stmt->close();
+    $connection->close();
+    $connection = null;
+
+    return $notice;
+}
 ?>
