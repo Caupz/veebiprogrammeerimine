@@ -4,11 +4,15 @@ require("../../../config.php");
 function escapePostData($index) {
     $str = '';
     if(isset($_POST[$index])) {
-        $str = $_POST[$index];
-        $str = trim($str);
-        $str = stripslashes($str);
-        $str = htmlspecialchars($str);
+        $str = escapeStr($_POST[$index]);
     }
+    return $str;
+}
+
+function escapeStr($str) {
+    $str = trim($str);
+    $str = stripslashes($str);
+    $str = htmlspecialchars($str);
     return $str;
 }
 
@@ -60,6 +64,38 @@ function getAllAnimals() {
     return $entities;
 }
 
+function getAllUsersWithEmail($email) {
+    setDbConnection();
+    $email = escapeStr($email);
+
+    $connection = $GLOBALS['connection'];
+    $stmt = $connection->prepare("SELECT id, firstname, lastname, email, gender, birthdate, created_at FROM vpusers WHERE email = '{$email}'");
+    $id = "";
+    $firstname = "";
+    $lastname = "";
+    $email = "";
+    $gender = "";
+    $birthdate = "";
+    $created_at = "";
+    $stmt->bind_result($id, $firstname, $lastname, $email, $gender, $birthdate, $created_at);
+    $stmt->execute();
+    $entities = [];
+
+    while($stmt->fetch()) {
+        $entities[] = [
+            'id' => $id,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+            'gender' => $gender,
+            'birthdate' => $birthdate,
+            'created_at' => $created_at,
+        ];
+    }
+
+    return $entities;
+}
+
 /*
  * $table - table name in database
  * $values = [
@@ -77,6 +113,15 @@ function insertInto($table, $values) {
     $valuesInStr = "";
     $_values = [];
     $paramTypes = "";
+
+    if($table == 'vpusers' && isset($values['email'])) {
+        $usersWithSameEmail = getAllUsersWithEmail($values['email']);
+        if(count($usersWithSameEmail) > 0) {
+            $connection->close();
+            $connection = null;
+            return "Sellise emailiga kasutaja on juba olemas.";
+        }
+    }
 
     foreach($values as $key => $value) {
         if(is_string($value)) $paramTypes .= "s";
