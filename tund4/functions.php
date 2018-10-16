@@ -97,12 +97,70 @@ function getAllUnvalidatedComments() {
     return $entities;
 }
 
+function getAllValidatedComments() {
+    setDbConnection();
+    $connection = $GLOBALS['connection'];
+    $stmt = $connection->prepare('SELECT id, user_id, comment, created_at FROM comment WHERE accepted = 1 AND accepted_id > 0 ORDER BY id DESC');
+    $id = "";
+    $user_id = "";
+    $comment = "";
+    $created_at = "";
+    $stmt->bind_result($id, $user_id, $comment, $created_at);
+    $stmt->execute();
+    $entities = [];
+
+    while($stmt->fetch()) {
+        $entities[] = [
+            'id' => $id,
+            'user_id' => $user_id,
+            'comment' => $comment,
+            'created_at' => $created_at
+        ];
+    }
+    $stmt->close();
+    $connection->close();
+    $connection = null;
+    return $entities;
+}
+
 function getAllUsersWithEmail($email) {
     setDbConnection();
     $email = escapeStr($email);
 
     $connection = $GLOBALS['connection'];
     $stmt = $connection->prepare("SELECT id, firstname, lastname, email, gender, birthdate, created_at FROM vpusers WHERE email = '{$email}'");
+    $id = "";
+    $firstname = "";
+    $lastname = "";
+    $email = "";
+    $gender = "";
+    $birthdate = "";
+    $created_at = "";
+    $stmt->bind_result($id, $firstname, $lastname, $email, $gender, $birthdate, $created_at);
+    $stmt->execute();
+    $entities = [];
+
+    while($stmt->fetch()) {
+        $entities[] = [
+            'id' => $id,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+            'gender' => $gender,
+            'birthdate' => $birthdate,
+            'created_at' => $created_at,
+        ];
+    }
+
+    return $entities;
+}
+
+function getAllUsersWithoutEmail($email) {
+    setDbConnection();
+    $email = escapeStr($email);
+
+    $connection = $GLOBALS['connection'];
+    $stmt = $connection->prepare("SELECT id, firstname, lastname, email, gender, birthdate, created_at FROM vpusers WHERE email NOT LIKE '{$email}'");
     $id = "";
     $firstname = "";
     $lastname = "";
@@ -259,6 +317,7 @@ function signIn($email, $password) {
                 $_SESSION['id'] = $id;
                 $_SESSION['firstname'] = $firstname;
                 $_SESSION['lastname'] = $lastname;
+                $_SESSION['email'] = $email;
                 header("Location: main.php");
                 exit();
             } else {

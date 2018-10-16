@@ -26,6 +26,7 @@ if(!isset($_SESSION['id'])) {
     <ul>
         <li><a href="?logout=1">Logi välja</a></li>
         <li><a href="validatemsg.php">Valideeri anonüümseid sõnumeid</a></li>
+        <li><a href="userprofile.php">Kasutaja profiil</a></li>
     </ul>
 
     <p>

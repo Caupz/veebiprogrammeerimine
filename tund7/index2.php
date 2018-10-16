@@ -1,5 +1,5 @@
 <?php
-require("../tund4/functions.php");
+require("/home/cauphel/functions.php");
 $notice = "";
 $email = "";
 $emailError = "";
