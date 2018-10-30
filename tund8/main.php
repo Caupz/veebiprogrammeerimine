@@ -11,16 +11,11 @@ if(!isset($_SESSION['id'])) {
     exit();
 }
 
+$title = "Pealeht";
+require("../views/header.php");
 ?>
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-	<title>Pealeht</title>
-  </head>
-  <body>
-    <h1>Pealeht</h1>
+    <h1><?= $title ?></h1>
 	<p>See leht on valminud <a href="http://www.tlu.ee" target="_blank">TLÜ</a> õppetöö raames ja ei oma mingisugust, mõtestatud või muul moel väärtuslikku sisu.</p>
 	<hr>
     <ul>
@@ -28,6 +23,7 @@ if(!isset($_SESSION['id'])) {
         <li><a href="validatemsg.php">Valideeri anonüümseid sõnumeid</a></li>
         <li><a href="validatedmessages.php">Valideeritud sõnumid</a></li>
         <li><a href="userprofile.php">Kasutaja profiil</a></li>
+        <li><a href="imageupload.php">Pildi üleslaadimine</a></li>
     </ul>
 
     <p>
