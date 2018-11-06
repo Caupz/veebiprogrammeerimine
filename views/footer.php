@@ -1,2 +1,4 @@
+
+<?= getDirectoryFiles($currentDir) ?>
 </body>
 </html>

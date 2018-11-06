@@ -1,4 +1,6 @@
 <?php
+$currentDir = __DIR__;
+
 require("/home/cauphel/functions.php");
 
 if(isset($_GET['logout'])) {
@@ -13,7 +15,7 @@ if(!isset($_SESSION['id'])) {
 $title = "Piltide üleslaadimine";
 require("../views/header.php");
 
-imageUpload();
+imageUpload(600, 400);
 ?>
 
 <h1><?= $title ?></h1>
@@ -22,6 +24,16 @@ imageUpload();
     <form action="imageupload.php" method="post" enctype="multipart/form-data">
         Select image to upload:
         <input type="file" name="fileToUpload" id="fileToUpload">
+        <br><br>
+        <label>Pildi kirjeldus</label><br>
+        <input type="text" name="alt"><br>
+        <br>
+        <label>Kasutusõigus</label><br>
+        <input id="imagePrivacyPublic" type="radio" name="privacy" value="1"><label for="imagePrivacyPublic">Avalik</label><br>
+        <input id="imagePrivacyLoggedIn" type="radio" name="privacy" value="2"><label for="imagePrivacyLoggedIn">Sisseloginud kasutajad</label><br>
+        <input id="imagePrivacyPrivate" type="radio" name="privacy" value="3" checked><label for="imagePrivacyPrivate">Privaatne</label><br>
+        <br>
+
         <input type="submit" value="Upload Image" name="submit">
     </form>
 </div>
@@ -31,5 +43,6 @@ imageUpload();
 <ul>
     <li><a href="?logout=1">Logi välja</a></li>
 </ul>
+
 
 <?php require("../views/footer.php"); ?>
