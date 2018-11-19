@@ -3,12 +3,15 @@
 class ImageUpload {
 
     private $tempImg;
-    private $imageFileType;
+    public $imageFileType;
     private $tempName;
     private $img;
+    public $size;
 
-    public function __construct($tempName, $extension) {
-        $this->tempName = $tempName;
+    public function __construct($imgData) {
+        $this->tempName = $imgData['tmp_name'];
+        $this->size = $imgData['size'];
+        $extension = strtolower(pathinfo(basename($imgData['name']),PATHINFO_EXTENSION));
         $this->imageFileType = $extension;
         $this->imageFromFile();
     }
@@ -17,6 +20,17 @@ class ImageUpload {
     {
         imagedestroy($this->tempImg);
         imagedestroy($this->img);
+    }
+
+    public function isValidSize() {
+        if ($this->size > 500000) {
+            return false;
+        }
+        return true;
+    }
+
+    public function isImageType() {
+        return ($this->imageFileType == "jpg" || $this->imageFileType == "png" || $this->imageFileType == "jpeg" || $this->imageFileType == "gif");
     }
 
     private function imageFromFile() {
