@@ -39,6 +39,19 @@ require("../views/header.php");
                 <li><?= $user['email'] ?> | <?= $user['created_at'] ?></li>
             <?php endforeach; ?>
         </ul>
+
+
+        <h2>Enda üleslaetud pildid:</h2>
+        <?php $pics = getAllUserPictures(); ?>
+        <?php foreach($pics as $pic): ?>
+            <img src="http://greeny.cs.tlu.ee/~cauphel/uploads/<?= $pic['filename'].'_thumbnail.'.$pic['extension'] ?>" alt="<?= $pic['alt'] ?>" />
+        <?php endforeach; ?>
+
+        <h2>Enda üleslaetud privaatsed pildid:</h2>
+        <?php $pics = getAllUserPrivatePictures(); ?>
+        <?php foreach($pics as $pic): ?>
+            <img src="http://greeny.cs.tlu.ee/~cauphel/uploads/<?= $pic['filename'].'_thumbnail.'.$pic['extension'] ?>" alt="<?= $pic['alt'] ?>" />
+        <?php endforeach; ?>
     </div>
   </body>
 </html>
