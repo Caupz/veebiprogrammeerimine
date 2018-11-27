@@ -7,7 +7,8 @@ if(!isset($title)) $title = "View variable: pageTitle undefined";
 <head>
     <meta charset="utf-8">
     <title><?= $title ?></title>
-    <link rel="stylesheet" href="http://greeny.cs.tlu.ee/~cauphel/site.css">
+    <link rel="stylesheet" href="http://greeny.cs.tlu.ee/~cauphel/site.css?v=1">
+    <script type="text/javascript" src="http://greeny.cs.tlu.ee/~cauphel/main.js?v=1" defer></script>
 </head>
 <body>
 <div>
