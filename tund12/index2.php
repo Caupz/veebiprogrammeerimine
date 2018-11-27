@@ -4,6 +4,8 @@ $notice = "";
 $email = "";
 $emailError = "";
 $passwordError = "";
+$page = 0;
+if(isset($_GET['page']) && $_GET['page'] > 0) $page = $_GET['page'];
 
 if(isset($_POST["login"])){
     if (isset($_POST["email"]) and !empty($_POST["email"])){
@@ -29,6 +31,8 @@ if(isset($_POST["login"])){
 <head>
     <meta charset="utf-8">
     <title>Katseline veeb</title>
+    <link rel="stylesheet" href="http://greeny.cs.tlu.ee/~cauphel/site.css?v=1">
+    <script type="text/javascript" src="http://greeny.cs.tlu.ee/~cauphel/main.js?v=1" defer></script>
 </head>
 <body>
 <h1>Teretulemast</h1>
@@ -66,6 +70,19 @@ if(isset($_POST["login"])){
         <img src="http://greeny.cs.tlu.ee/~cauphel/uploads/<?= $pic['filename'].'_thumbnail.'.$pic['extension'] ?>" alt="<?= $pic['alt'] ?>" />
     <?php endforeach; ?>
 
+    <div id="modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg" alt="" />
+        <div id="caption"></div>
+    </div>
+
+    <h1>Pildi galerii tund 12 kodune töö</h1>
+    <div id="gallery" class="gallery">
+        <?php $pics = getPictures($page, 5); ?>
+        <?php foreach($pics as $pic): ?>
+            <img src="http://greeny.cs.tlu.ee/~cauphel/uploads/<?= $pic['filename'].'_thumbnail.'.$pic['extension'] ?>" alt="<?= $pic['alt'] ?>" data-src="<?= $pic['filename'].'.'.$pic['extension'] ?>" />
+        <?php endforeach; ?>
+    </div>
 
 </div>
 

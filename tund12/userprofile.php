@@ -15,6 +15,7 @@ if(!isset($_SESSION['txt_color'])) $_SESSION['txt_color'] = "#000000";
     <title>Kasutaja profiil</title>
     <link rel="stylesheet" href="http://greeny.cs.tlu.ee/~cauphel/site.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+    <script type="text/javascript" src="http://greeny.cs.tlu.ee/~cauphel/main.js?v=1" defer></script>
 </head>
 <body>
 
@@ -38,6 +39,23 @@ if(!isset($_SESSION['txt_color'])) $_SESSION['txt_color'] = "#000000";
     <input name="txt_color" type="color" value="<?= $_SESSION['txt_color']; ?>"><br>
     <input type="file" name="fileToUpload" id="fileToUpload"><br>
     <input name="submit" type="submit" value="Salvesta profiil"><br>
+
+    <h2>Kasutaja profiilid</h2>
+    <div id="gallery" class="gallery">
+        <?php $pics = getUserAvatars(); ?>
+        <?php foreach($pics as $pic): ?>
+            <?php $alt = "" ?>
+            <?php if(isset($pic['alt'])): ?>
+                <?php $alt = $pic['alt']; ?>
+            <?php endif; ?>
+            <img src="http://greeny.cs.tlu.ee/~cauphel/uploads/<?= $pic['filename'].'_thumbnail.'.$pic['extension'] ?>" alt="<?= $alt ?>" data-src="<?= $pic['filename'].'.'.$pic['extension'] ?>" />
+        <?php endforeach; ?>
+    </div>
+    <div id="modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg" alt="" />
+        <div id="caption"></div>
+    </div>
 </form>
 </div>
 
